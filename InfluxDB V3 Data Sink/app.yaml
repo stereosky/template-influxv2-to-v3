@@ -8,37 +8,37 @@ variables:
     required: false
   - name: INFLUXDB_HOST
     inputType: FreeText
-    description: ""
+    description: ''
     defaultValue: https://us-east-1-1.aws.cloud2.influxdata.com
     required: true
   - name: INFLUXDB_ORG
     inputType: FreeText
-    description: ""
+    description: ''
     defaultValue: ContentSquad
     required: true
   - name: INFLUXDB_DATABASE
     inputType: FreeText
-    description: ""
+    description: ''
     defaultValue: connector-testing-sink
     required: false
   - name: input
     inputType: InputTopic
-    description: ""
+    description: ''
     defaultValue: influxv2-data
     required: false
   - name: INFLUXDB_TOKEN
     inputType: Secret
-    description: ""
+    description: ''
     defaultValue: influx_db3
     required: true
   - name: INFLUXDB_FIELD_KEYS
     inputType: FreeText
-    description: ""
-    defaultValue: "['activation']"
+    description: ''
+    defaultValue: "['count','confidence-score']"
     required: true
   - name: CONSUMER_GROUP_NAME
     inputType: FreeText
-    description: ""
+    description: ''
     defaultValue: influxdb-data-writerv5
     required: false
 dockerfile: dockerfile

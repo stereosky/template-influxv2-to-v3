@@ -39,7 +39,7 @@ variables:
   - name: CONSUMER_GROUP_NAME
     inputType: FreeText
     description: ''
-    defaultValue: influxdb-data-writerv5
+    defaultValue: influxdb-data-writer
     required: false
 dockerfile: dockerfile
 runEntryPoint: main.py

@@ -90,7 +90,7 @@ deployments:
         inputType: FreeText
         description: ''
         required: true
-        value: "['count','sexyness']"
+        value: "['count','confidence-score']"
       - name: CONSUMER_GROUP_NAME
         inputType: FreeText
         description: ''

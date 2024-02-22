@@ -33,7 +33,7 @@ variables:
     required: true
   - name: INFLUXDB_FIELD_KEYS
     inputType: FreeText
-    description: ''
+    description: The names of the fields to look for in the incoming data and retain when writing to InfluxDB V3
     defaultValue: "['count','confidence-score']"
     required: true
   - name: CONSUMER_GROUP_NAME

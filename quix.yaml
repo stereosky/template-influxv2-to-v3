@@ -20,7 +20,7 @@ deployments:
         inputType: OutputTopic
         description: Name of the output topic to write into
         required: true
-        value: influxv2-data-mixedv2
+        value: influxv2-data
       - name: INFLUXDB_ORG
         inputType: FreeText
         description: ""
@@ -80,7 +80,7 @@ deployments:
         inputType: InputTopic
         description: ""
         required: false
-        value: influxv2-data-mixedv2
+        value: influxv2-data
       - name: INFLUXDB_TOKEN
         inputType: Secret
         description: ""
@@ -95,7 +95,7 @@ deployments:
         inputType: FreeText
         description: ""
         required: false
-        value: influxdb-data-writerv5
+        value: influxdb-data-writer
 
 # This section describes the Topics of the data pipeline
 topics:

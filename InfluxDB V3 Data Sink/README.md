@@ -1,30 +1,15 @@
-# Starter transformation
+# InfluxDB V3 Sink
+A service that continuously listens to an Kafka topic and writes new data to your chosen InfluxDB V3 database while only including your chosen tags and fields.
 
-[This project](https://github.com/quixio/quix-samples/tree/main/python/transformations/empty-template) is an example of how to transform data on the fly between source and destination.
+The **InfluxDB V3 Sink** service requires the following environment variables to be set:
 
-The default implementation subscribes to data from the source and publishes to the destination as-well-as printing content to console output. 
-
-Modify the Python code to transform your data on the fly.
-
-## How to run
-
-Create a [Quix](https://portal.platform.quix.ai/self-sign-up?xlink=github) account or log-in and visit the Samples to use this project.
-
-Clicking `Edit code` on the Sample, forks the project to your own Git repo so you can customize it before deploying.
-
-## Environment variables
-
-The code sample uses the following environment variables:
-
-- **input**: Name of the input topic to listen to.
-- **output**: Name of the output topic to write to.
-
-## Contribute
-
-Submit forked projects to the Quix [GitHub](https://github.com/quixio/quix-samples) repo. Any new project that we accept will be attributed to you and you'll receive $200 in Quix credit.
-
-## Open source
-
-This project is open source under the Apache 2.0 license and available in our [GitHub](https://github.com/quixio/quix-samples) repo.
-
-Please star us and mention us on social to show your appreciation.
+| Variable   |      Description      |  Example |
+|----------|---------------------------------------|------|
+| `input`          |  The input topic from which to pull the  InfluxDB V2 data.  | `influxv2-data` |
+| `INFLUXDB_ORG`   |  The configured organization in the InfluxDB V3 instance.      | `AcmeInc` |
+| `INFLUXDB_HOST`  | The address of the InfluxDB V3 Serverless Cloud instance.  | `https://us-east-1-2.aws.cloud2.influxdata.com` |
+| `INFLUXDB_DATABASE` | The name of the InfluxDB database (aka bucket) to store the migrated data. |  `machine-telemetry-v3` |
+| `INFLUXDB_TOKEN` | The influxDBV3 access token (defined as a secret in Quix).  |   `Rm3545345357qnv-gOX54346346EHr-g1YSB79T29w_5VdwEuXWK6gg535g34232yDX_VAYfA33RFd4Xw==` |
+| `INFLUXDB_TAG_KEYS` | A list of tags to look for in the migrated data (all others will be ignored). |  `['machineID','barcode','provider']` |
+| `INFLUXDB_FIELD_KEYS` | A list of fields to look for in the migrated data (all others will be ignored).  |  `['temperature','load','power','vibration']` |
+| `CONSUMER_GROUP_NAME` | The name of the Kafka consumer group (usually only needs to be changed when testing) | `influxv2-reader` |

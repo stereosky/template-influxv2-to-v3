@@ -74,7 +74,7 @@ services:
       - redpanda
 
   influx-v3-sink:
-    container_name: influx-v3-source
+    container_name: influx-v3-sink
     restart: always
     build:
       context: "./InfluxDB V3 Data Sink"

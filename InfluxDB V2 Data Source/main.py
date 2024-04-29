@@ -19,7 +19,7 @@ app = Application(consumer_group="influxdbv2_migrate", auto_create_topics=True)
 # Define the topic using the "output" environment variable
 topic = app.topic(os.getenv("output", "influxv2-data"))
 
-# Create an InfluxDB V2 client
+# Create an InfluxDB v2 client
 influxdb2_client = influxdb_client.InfluxDBClient(token=os.environ["INFLUXDB_TOKEN"],
                         org=os.environ["INFLUXDB_ORG"],
                         url=os.environ["INFLUXDB_HOST"])

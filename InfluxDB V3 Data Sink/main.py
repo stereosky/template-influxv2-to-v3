@@ -49,24 +49,6 @@ interval = os.getenv("task_interval", "5m")
 
 
 
-
-
-
-
-
-
-
-
-
-
-# Read the environment variable for the field(s) to get.
-# For multiple fields, use a list "['field1','field2']"
-                                           
-influx3_client = InfluxDBClient3(token=os.environ["INFLUXDB_TOKEN"],
-                         host=os.environ["INFLUXDB_HOST"],
-                         org=os.environ["INFLUXDB_ORG"],
-                         database=os.environ["INFLUXDB_DATABASE"])
-
 def send_data_to_influx(message):
     logger.info(f"Processing message: {message}")
     try:

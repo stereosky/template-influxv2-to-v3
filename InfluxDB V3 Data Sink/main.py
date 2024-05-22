@@ -40,11 +40,6 @@ influxdb3_client = InfluxDBClient3.InfluxDBClient3(
 )
 
 
-interval = os.getenv("task_interval", "5m")
-
-
-
-
 def send_data_to_influx(message):
     logger.info(f"Processing message: {message}")
     try:

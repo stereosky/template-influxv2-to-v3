@@ -40,7 +40,6 @@ influxdb3_client = InfluxDBClient3.InfluxDBClient3(
 )
 
 
-measurement_name = os.getenv("INFLUXDB_MEASUREMENT_NAME", os.environ["input"])
 interval = os.getenv("task_interval", "5m")
 
 

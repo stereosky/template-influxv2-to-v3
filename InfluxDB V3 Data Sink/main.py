@@ -3,8 +3,8 @@ import os
 import random
 import json
 import logging
-from time import sleep
 import ast
+from time import sleep
 
 # Import vendor-specific libraries
 from quixstreams import Application

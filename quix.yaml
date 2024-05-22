@@ -14,7 +14,7 @@ deployments:
       cpu: 200
       memory: 500
       replicas: 1
-    desiredStatus: Running
+    desiredStatus: Stopped
     variables:
       - name: output
         inputType: OutputTopic
@@ -25,12 +25,12 @@ deployments:
         inputType: FreeText
         description: ''
         required: true
-        value: Quixtest
+        value: DevRel
       - name: INFLUXDB_HOST
         inputType: FreeText
         description: ''
         required: true
-        value: https://influxdb-production-0ff2.up.railway.app
+        value: https://us-east-1-1.aws.cloud2.influxdata.com
       - name: task_interval
         inputType: FreeText
         description: ''
@@ -40,7 +40,7 @@ deployments:
         inputType: FreeText
         description: ''
         required: true
-        value: testbucket
+        value: quix
       - name: INFLUXDB_TOKEN
         inputType: Secret
         description: ''
@@ -54,7 +54,7 @@ deployments:
       cpu: 200
       memory: 500
       replicas: 1
-    desiredStatus: Running
+    desiredStatus: Stopped
     variables:
       - name: INFLUXDB_TAG_KEYS
         inputType: FreeText
@@ -100,7 +100,6 @@ deployments:
 # This section describes the Topics of the data pipeline
 topics:
   - name: influxv2-data
-    persisted: false
     configuration:
       partitions: 1
       replicationFactor: 2

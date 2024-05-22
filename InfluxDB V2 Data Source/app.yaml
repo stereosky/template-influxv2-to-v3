@@ -24,7 +24,7 @@ variables:
   - name: INFLUXDB_BUCKET
     inputType: FreeText
     description: ''
-    defaultValue: testbucket
+    defaultValue: quix
     required: true
   - name: INFLUXDB_TOKEN
     inputType: Secret

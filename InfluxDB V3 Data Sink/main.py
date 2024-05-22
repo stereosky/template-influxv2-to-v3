@@ -5,13 +5,10 @@ import json
 import logging
 from time import sleep
 import ast
-# import datetime
-
 
 # Import vendor-specific libraries
 from quixstreams import Application
 import influxdb_client_3 as InfluxDBClient3
-
 
 # Initialize logging
 logging.basicConfig(level=logging.INFO)

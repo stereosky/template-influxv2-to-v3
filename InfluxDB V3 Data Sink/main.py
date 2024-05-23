@@ -82,8 +82,11 @@ def send_data_to_influx(message):
         print(f"{str(datetime.datetime.utcnow())}: Write failed")
         print(e)
 
-sdf = app.dataframe(input_topic)
-sdf = sdf.update(send_data_to_influx)
+sdf = (
+    app
+        .dataframe(input_topic)
+        .update(send_data_to_influx)
+)
 
 if __name__ == "__main__":
     print("Starting application")

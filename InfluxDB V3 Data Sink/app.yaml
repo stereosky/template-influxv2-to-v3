@@ -14,7 +14,7 @@ variables:
   - name: INFLUXDB_ORG
     inputType: FreeText
     description: ''
-    defaultValue: ContentSquad
+    defaultValue: <INFLUXDB_ORG>
     required: true
   - name: INFLUXDB_DATABASE
     inputType: FreeText

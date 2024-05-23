@@ -9,12 +9,12 @@ deployments:
   - name: InfluxDB V2 Data Source
     application: InfluxDB V2 Data Source
     deploymentType: Service
-    version: a9d23348e272b9273b5105560d249327c4096446
+    version: latest
     resources:
       cpu: 200
       memory: 500
       replicas: 1
-    desiredStatus: Running
+    desiredStatus: Stopped
     variables:
       - name: output
         inputType: OutputTopic
@@ -25,12 +25,12 @@ deployments:
         inputType: FreeText
         description: ''
         required: true
-        value: Quixtest
+        value: <INFLUXDB_ORG>
       - name: INFLUXDB_HOST
         inputType: FreeText
         description: ''
         required: true
-        value: https://influxdb-production-0ff2.up.railway.app
+        value: https://us-east-1-1.aws.cloud2.influxdata.com
       - name: task_interval
         inputType: FreeText
         description: ''
@@ -40,7 +40,7 @@ deployments:
         inputType: FreeText
         description: ''
         required: true
-        value: testbucket
+        value: <INFLUXDB_BUCKET>
       - name: INFLUXDB_TOKEN
         inputType: Secret
         description: ''
@@ -49,18 +49,18 @@ deployments:
   - name: InfluxDB V3 Data Sink
     application: InfluxDB V3 Data Sink
     deploymentType: Service
-    version: 659e5e49ef5c7d43af3c23bcf7759b86b8fb8649
+    version: latest
     resources:
       cpu: 200
       memory: 500
       replicas: 1
-    desiredStatus: Running
+    desiredStatus: Stopped
     variables:
       - name: INFLUXDB_TAG_KEYS
         inputType: FreeText
-        description: Name of the input topic to listen to.
+        description: The names of tags to look for in the incoming data and retain when writing to InfluxDB v3
         required: false
-        value: "['city','collector','location']"
+        value: "['location','sensor-id']"
       - name: INFLUXDB_HOST
         inputType: FreeText
         description: ''
@@ -70,7 +70,7 @@ deployments:
         inputType: FreeText
         description: ''
         required: true
-        value: ContentSquad
+        value: <INFLUXDB_ORG>
       - name: INFLUXDB_DATABASE
         inputType: FreeText
         description: ''
@@ -88,7 +88,7 @@ deployments:
         secretKey: influx_db3
       - name: INFLUXDB_FIELD_KEYS
         inputType: FreeText
-        description: ''
+        description: The names of the fields to look for in the incoming data and retain when writing to InfluxDB v3
         required: true
         value: "['count','confidence-score']"
       - name: CONSUMER_GROUP_NAME

@@ -9,12 +9,12 @@ variables:
   - name: INFLUXDB_ORG
     inputType: FreeText
     description: ''
-    defaultValue: Quixtest
+    defaultValue: <INFLUXDB_ORG>
     required: true
   - name: INFLUXDB_HOST
     inputType: FreeText
     description: ''
-    defaultValue: https://influxdb-production-0ff2.up.railway.app
+    defaultValue: https://us-east-1-1.aws.cloud2.influxdata.com
     required: true
   - name: task_interval
     inputType: FreeText
@@ -24,7 +24,7 @@ variables:
   - name: INFLUXDB_BUCKET
     inputType: FreeText
     description: ''
-    defaultValue: testbucket
+    defaultValue: quix
     required: true
   - name: INFLUXDB_TOKEN
     inputType: Secret

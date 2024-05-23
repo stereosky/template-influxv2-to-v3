@@ -1,36 +1,44 @@
-# import Utility modules
+# Import utility modules
 import os
-import ast
-import datetime
+import random
+import json
 import logging
+import ast
+from time import sleep
 
-# import vendor-specific modules
+# Import vendor-specific libraries
 from quixstreams import Application
-from quixstreams.models.serializers.quix import JSONDeserializer
-from influxdb_client_3 import InfluxDBClient3
+import influxdb_client_3 as InfluxDBClient3
 
+# Initialize logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 consumer_group_name = os.environ.get('CONSUMER_GROUP_NAME', "influxdb-data-writer")
 
-app = Application.Quix(consumer_group=consumer_group_name,
-                       auto_offset_reset="earliest")
+# Create a Quix Application
+app = Application(
+    consumer_group=consumer_group_name,
+    auto_offset_reset="earliest",
+    auto_create_topics=True)
 
-input_topic = app.topic(os.environ["input"], value_deserializer=JSONDeserializer())
-
+input_topic = app.topic(
+    name=os.environ["input"],
+    key_serializer="string",
+    value_serializer="json"
+)
 
 # Read the environment variable and convert it to a dictionary
 tag_keys = ast.literal_eval(os.environ.get('INFLUXDB_TAG_KEYS', "[]"))
 field_keys = ast.literal_eval(os.environ.get('INFLUXDB_FIELD_KEYS', "[]"))
 
+influxdb3_client = InfluxDBClient3.InfluxDBClient3(
+    token=os.environ["INFLUXDB_TOKEN"],
+    host=os.environ["INFLUXDB_HOST"],
+    org=os.environ["INFLUXDB_ORG"],
+    database=os.environ["INFLUXDB_DATABASE"]
+)
 
-# Read the environment variable for the field(s) to get.
-# For multiple fields, use a list "['field1','field2']"
-                                           
-influx3_client = InfluxDBClient3(token=os.environ["INFLUXDB_TOKEN"],
-                         host=os.environ["INFLUXDB_HOST"],
-                         org=os.environ["INFLUXDB_ORG"],
-                         database=os.environ["INFLUXDB_DATABASE"])
 
 def send_data_to_influx(message):
     logger.info(f"Processing message: {message}")
@@ -74,8 +82,11 @@ def send_data_to_influx(message):
         print(f"{str(datetime.datetime.utcnow())}: Write failed")
         print(e)
 
-sdf = app.dataframe(input_topic)
-sdf = sdf.update(send_data_to_influx)
+sdf = (
+    app
+        .dataframe(input_topic)
+        .update(send_data_to_influx)
+)
 
 if __name__ == "__main__":
     print("Starting application")

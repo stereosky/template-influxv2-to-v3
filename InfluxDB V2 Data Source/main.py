@@ -14,7 +14,11 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # Create a Quix Application
-app = Application(consumer_group="influxdbv2_migrate", auto_create_topics=True)
+app = Application(
+    broker_address=os.getenv("KAFKA_BROKER_ADDRESS"),
+    consumer_group="influxdbv2_migrate",
+    auto_create_topics=True
+)
 
 # Define the topic using the "output" environment variable
 topic = app.topic(os.getenv("output", "influxv2-data"))
@@ -121,12 +125,12 @@ def main():
                 # Generate a unique message_key for these rows
                 message_key = f"INFLUX2_DATA_{str(random.randint(1, 100)).zfill(3)}_{index}"
                 # Publish the data to the topic
-                logger.info(f"Produced message with key:{message_key}, value:{obj}")
                 producer.produce(
                     topic=topic.name,
                     key=message_key,
-                    value=obj,
+                    value=json.dumps(obj),
                 )
+                logger.info(f"Produced message with key: {message_key}, value: {obj}")
 
 if __name__ == "__main__":
     try:

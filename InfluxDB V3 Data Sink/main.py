@@ -5,6 +5,7 @@ import json
 import logging
 import ast
 from time import sleep
+import datetime
 
 # Import vendor-specific libraries
 from quixstreams import Application
@@ -18,6 +19,7 @@ consumer_group_name = os.environ.get('CONSUMER_GROUP_NAME', "influxdb-data-write
 
 # Create a Quix Application
 app = Application(
+    broker_address=os.getenv("KAFKA_BROKER_ADDRESS"),
     consumer_group=consumer_group_name,
     auto_offset_reset="earliest",
     auto_create_topics=True)
@@ -75,7 +77,7 @@ def send_data_to_influx(message):
             "time": writetime
         }
 
-        influx3_client.write(record=points, write_precision="ms")
+        influxdb3_client.write(record=points, write_precision="ms")
         
         print(f"{str(datetime.datetime.utcnow())}: Persisted ponts to influx: {points}")
     except Exception as e:

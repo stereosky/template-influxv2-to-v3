@@ -1,4 +1,4 @@
-quixstreams~=2.5.0
-python-dotenv
-influxdb-client==1.43.0
-pandas
+influxdb-client==1.48.0
+pandas==2.2.3
+python-dotenv==1.0.1
+quixstreams~=3.3.0

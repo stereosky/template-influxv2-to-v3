@@ -1,7 +1,4 @@
-version: '3.7'
-name: template-influxv2-to-v3
 services:
-
   redpanda:
     container_name: redpanda
     image: docker.redpanda.com/redpandadata/redpanda:v23.2.19
@@ -69,7 +66,11 @@ services:
     environment:
       - KAFKA_BROKER_ADDRESS=redpanda:9092
       - output=influxv2-data
-      - use_local_kafka=true
+      - INFLUXDB_HOST=https://quix-uprelq3jh2vyt6.eu-west-1.timestream-influxdb.amazonaws.com:8086
+      - INFLUXDB_ORG=46f638a665f033ab
+      - INFLUXDB_TOKEN=gsp2gLjSOCLWKUY2OUFZ7MonIkQsDWrCelSVjmvEm4D5EUZgOFwPV-TlAxuUxPIESQcF0KTD5hrag_kyFCAo3A==
+      - INFLUXDB_BUCKET=legacy
+      - task_interval=30d
     depends_on:
       - redpanda
 
@@ -81,6 +82,10 @@ services:
     environment:
       - KAFKA_BROKER_ADDRESS=redpanda:9092
       - input=influxv2-data
-      - use_local_kafka=true
+      - INFLUXDB_HOST=https://us-east-1-1.aws.cloud2.influxdata.com/
+      - INFLUXDB_ORG=DevRel
+      - INFLUXDB_DATABASE=migrated
+      - INFLUXDB_TOKEN=BNfT7oGljke6oJS3NLsLc4BD2VCwcOlo_kuET7gK-mGHuu2352FLGaW8EFJvPRuMZWps3Khmd6umC4B5AGMSCQ==
+      - INFLUXDB_FIELD_KEYS=['co', 'humidity', 'temperature']
     depends_on:
       - redpanda

@@ -1,10 +1,10 @@
-# Import utility modules
 import os
 import random
 import json
 import logging
 import ast
 from time import sleep
+import datetime
 
 # Import vendor-specific libraries
 from quixstreams import Application
@@ -14,29 +14,39 @@ import influxdb_client_3 as InfluxDBClient3
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-consumer_group_name = os.environ.get('CONSUMER_GROUP_NAME', "influxdb-data-writer")
+# Initialize parameters from environment
+KAFKA_BROKER_ADDRESS = os.getenv("KAFKA_BROKER_ADDRESS")
+INPUT_TOPIC = os.getenv("INPUT_TOPIC", "influxdb-v2-data")
+INFLUXDB_HOST = os.getenv("INFLUXDB_HOST")
+INFLUXDB_ORG = os.getenv("INFLUXDB_ORG")
+INFLUXDB_BUCKET = os.getenv("INFLUXDB_BUCKET")
+INFLUXDB_TOKEN = os.getenv("INFLUXDB_TOKEN")
+INFLUXDB_TAG_KEYS = os.getenv("INFLUXDB_TAG_KEYS", "[]")
+INFLUXDB_FIELD_KEYS = os.getenv("INFLUXDB_FIELD_KEYS", "[]")
 
 # Create a Quix Application
 app = Application(
-    consumer_group=consumer_group_name,
+    broker_address=KAFKA_BROKER_ADDRESS,
+    consumer_group="influxdb-v3-writer",
     auto_offset_reset="earliest",
-    auto_create_topics=True)
+    auto_create_topics=True,
+)
 
 input_topic = app.topic(
-    name=os.environ["input"],
+    name=INPUT_TOPIC,
     key_serializer="string",
-    value_serializer="json"
+    value_serializer="json",
 )
 
 # Read the environment variable and convert it to a dictionary
-tag_keys = ast.literal_eval(os.environ.get('INFLUXDB_TAG_KEYS', "[]"))
-field_keys = ast.literal_eval(os.environ.get('INFLUXDB_FIELD_KEYS', "[]"))
+tag_keys = ast.literal_eval(INFLUXDB_TAG_KEYS)
+field_keys = ast.literal_eval(INFLUXDB_FIELD_KEYS)
 
 influxdb3_client = InfluxDBClient3.InfluxDBClient3(
-    token=os.environ["INFLUXDB_TOKEN"],
-    host=os.environ["INFLUXDB_HOST"],
-    org=os.environ["INFLUXDB_ORG"],
-    database=os.environ["INFLUXDB_DATABASE"]
+    host=INFLUXDB_HOST,
+    org=INFLUXDB_ORG,
+    token=INFLUXDB_TOKEN,
+    database=INFLUXDB_BUCKET,
 )
 
 
@@ -47,9 +57,9 @@ def send_data_to_influx(message):
         # Adjust to use an alternative timestamp if necesssary,
 
         writetime = datetime.datetime.utcnow()
-        writetime = writetime.isoformat(timespec='milliseconds') + 'Z'
+        writetime = writetime.isoformat(timespec="milliseconds") + "Z"
         
-        measurement_name = message['_measurement']
+        measurement_name = message["_measurement"]
 
         # Initialize the tags and fields dictionaries
         tags = {}
@@ -75,12 +85,13 @@ def send_data_to_influx(message):
             "time": writetime
         }
 
-        influx3_client.write(record=points, write_precision="ms")
+        influxdb3_client.write(record=points, write_precision="ms")
         
         print(f"{str(datetime.datetime.utcnow())}: Persisted ponts to influx: {points}")
     except Exception as e:
         print(f"{str(datetime.datetime.utcnow())}: Write failed")
         print(e)
+
 
 sdf = (
     app

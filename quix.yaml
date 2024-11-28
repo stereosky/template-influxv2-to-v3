@@ -6,8 +6,8 @@ metadata:
 
 # This section describes the Deployments of the data pipeline
 deployments:
-  - name: InfluxDB V2 Data Source
-    application: InfluxDB V2 Data Source
+  - name: InfluxDB v2 Source
+    application: InfluxDB v2 Source
     deploymentType: Service
     version: latest
     resources:
@@ -16,38 +16,38 @@ deployments:
       replicas: 1
     desiredStatus: Stopped
     variables:
-      - name: output
+      - name: OUTPUT_TOPIC
         inputType: OutputTopic
-        description: Name of the output topic to write into
+        description: The output topic to store the results fetched from the InfluxDB v2 queries
         required: true
-        value: influxv2-data
-      - name: INFLUXDB_ORG
-        inputType: FreeText
-        description: ''
-        required: true
-        value: <INFLUXDB_ORG>
+        value: influxdb-v2-data
       - name: INFLUXDB_HOST
         inputType: FreeText
-        description: ''
+        description: The address of the InfluxDB v2 instance
         required: true
-        value: https://us-east-1-1.aws.cloud2.influxdata.com
-      - name: task_interval
+        value: <INFLUXDB_HOST>
+      - name: INFLUXDB_ORG
         inputType: FreeText
-        description: ''
-        required: false
-        value: 5m
+        description: The configured organization in the InfluxDB v2 instance
+        required: true
+        value: <INFLUXDB_ORG>
       - name: INFLUXDB_BUCKET
         inputType: FreeText
-        description: ''
+        description: The name of the InfluxDB v2 bucket that stores the source data to be synced
         required: true
         value: <INFLUXDB_BUCKET>
       - name: INFLUXDB_TOKEN
         inputType: Secret
-        description: ''
+        description: The configured API Token to access the InfluxDB v2 instance (defined as a secret in Quix)
         required: true
-        secretKey: influx_db
-  - name: InfluxDB V3 Data Sink
-    application: InfluxDB V3 Data Sink
+        secretKey: INFLUXDB_TOKEN
+      - name: TASK_INTERVAL
+        inputType: FreeText
+        description: Defines both how often the query should be run against the database and the max age of the data to return. See the InfluxDB documentation for a full list of valid interval values
+        required: false
+        value: 1m
+  - name: InfluxDB v3 Sink
+    application: InfluxDB v3 Sink
     deploymentType: Service
     version: latest
     resources:
@@ -56,50 +56,45 @@ deployments:
       replicas: 1
     desiredStatus: Stopped
     variables:
-      - name: INFLUXDB_TAG_KEYS
-        inputType: FreeText
-        description: The names of tags to look for in the incoming data and retain when writing to InfluxDB v3
+      - name: INPUT_TOPIC
+        inputType: InputTopic
+        description: The input topic from which to consume the InfluxDB v2 data 
         required: false
-        value: "['location','sensor-id']"
+        value: influxdb-v2-data
       - name: INFLUXDB_HOST
         inputType: FreeText
-        description: ''
+        description: The address of the InfluxDB v3 instance
         required: true
         value: https://us-east-1-1.aws.cloud2.influxdata.com
       - name: INFLUXDB_ORG
         inputType: FreeText
-        description: ''
+        description: The configured organization in the InfluxDB v3 instance
         required: true
         value: <INFLUXDB_ORG>
-      - name: INFLUXDB_DATABASE
+      - name: INFLUXDB_BUCKET
         inputType: FreeText
-        description: ''
+        description: The name of the InfluxDB v3 bucket to store the synced data
         required: false
-        value: connector-testing-sink
-      - name: input
-        inputType: InputTopic
-        description: ''
-        required: false
-        value: influxv2-data
+        value: <INFLUXDB_BUCKET>
       - name: INFLUXDB_TOKEN
         inputType: Secret
-        description: ''
+        description: The configured API Token to access the InfluxDB v3 instance (defined as a secret in Quix)
         required: true
-        secretKey: influx_db3
+        secretKey: INFLUXDB_TOKEN
+      - name: INFLUXDB_TAG_KEYS
+        inputType: FreeText
+        description: A list of tags to select when when writing the data to InfluxDB v3 (all others will be ignored)
+        required: false
+        value: "['machineID','barcode','provider']"
       - name: INFLUXDB_FIELD_KEYS
         inputType: FreeText
-        description: The names of the fields to look for in the incoming data and retain when writing to InfluxDB v3
+        description: A list of fields to select when when writing the data to InfluxDB v3 (all others will be ignored)
         required: true
-        value: "['count','confidence-score']"
-      - name: CONSUMER_GROUP_NAME
-        inputType: FreeText
-        description: ''
-        required: false
-        value: influxdb-data-writer
+        value: "['temperature','load','power','vibration']"
 
 # This section describes the Topics of the data pipeline
 topics:
-  - name: influxv2-data
+  - name: influxdb-v2-data
     persisted: false
     configuration:
       partitions: 1

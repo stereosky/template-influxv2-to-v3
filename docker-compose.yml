@@ -1,7 +1,7 @@
 services:
   redpanda:
     container_name: redpanda
-    image: docker.redpanda.com/redpandadata/redpanda:v23.2.19
+    image: docker.redpanda.com/redpandadata/redpanda:v24.2.12
     command:
       - redpanda start
       - --smp 1
@@ -33,7 +33,7 @@ services:
 
   console:
     container_name: redpanda-console
-    image: docker.redpanda.com/redpandadata/console:v2.3.8
+    image: docker.redpanda.com/redpandadata/console:v2.7.2
     entrypoint: /bin/sh
     command: -c "echo \"$$CONSOLE_CONFIG_FILE\" > /tmp/config.yml; /app/console"
     environment:
@@ -58,34 +58,35 @@ services:
     depends_on:
       - redpanda
 
-  influx-v2-source:
-    container_name: influx-v2-source
+  influxdb-v2-source:
+    container_name: influxdb-v2-source
     restart: always
     build:
-      context: "./InfluxDB V2 Data Source"
+      context: "./influxdb_v2_source"
     environment:
       - KAFKA_BROKER_ADDRESS=redpanda:9092
-      - output=influxv2-data
-      - INFLUXDB_HOST=https://quix-uprelq3jh2vyt6.eu-west-1.timestream-influxdb.amazonaws.com:8086
-      - INFLUXDB_ORG=46f638a665f033ab
-      - INFLUXDB_TOKEN=gsp2gLjSOCLWKUY2OUFZ7MonIkQsDWrCelSVjmvEm4D5EUZgOFwPV-TlAxuUxPIESQcF0KTD5hrag_kyFCAo3A==
-      - INFLUXDB_BUCKET=legacy
-      - task_interval=30d
+      - OUTPUT_TOPIC=influxdb-v2-data
+      - INFLUXDB_HOST=
+      - INFLUXDB_ORG=
+      - INFLUXDB_BUCKET=
+      - INFLUXDB_TOKEN=
+      - TASK_INTERVAL=30d
     depends_on:
       - redpanda
 
-  influx-v3-sink:
-    container_name: influx-v3-sink
+  influxdb-v3-sink:
+    container_name: influxdb-v3-sink
     restart: always
     build:
-      context: "./InfluxDB V3 Data Sink"
+      context: "./influxdb_v3_sink"
     environment:
       - KAFKA_BROKER_ADDRESS=redpanda:9092
-      - input=influxv2-data
+      - INPUT_TOPIC=influxdb-v2-data
       - INFLUXDB_HOST=https://us-east-1-1.aws.cloud2.influxdata.com/
-      - INFLUXDB_ORG=DevRel
-      - INFLUXDB_DATABASE=migrated
-      - INFLUXDB_TOKEN=BNfT7oGljke6oJS3NLsLc4BD2VCwcOlo_kuET7gK-mGHuu2352FLGaW8EFJvPRuMZWps3Khmd6umC4B5AGMSCQ==
-      - INFLUXDB_FIELD_KEYS=['co', 'humidity', 'temperature']
+      - INFLUXDB_ORG=
+      - INFLUXDB_BUCKET=
+      - INFLUXDB_TOKEN=
+      - INFLUXDB_TAG_KEYS=[]
+      - INFLUXDB_FIELD_KEYS=[]
     depends_on:
       - redpanda
